@@ -616,6 +616,11 @@ bool load_bin_value_at(const char *filename, int index, double *out)
 
     fclose(f);
 
+
+
+
+    ///000000
+
     // Return true only if 1 element was successfully read
     return (read_elements == 1);
 }
