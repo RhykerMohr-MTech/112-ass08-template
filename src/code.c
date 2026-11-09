@@ -314,7 +314,7 @@ return (elements_written == 1 && close_status == 0);
 // TODO
 bool create_fabs_bin(const char *filename, double value)
 {
-FILE *f = fopen("filename", "wb");
+FILE *f = fopen(filename, "wb");
 if (f == NULL)
 {
     return false;       // always check!
@@ -359,7 +359,7 @@ if (written != 1)
     return false;
 }
 
-
+fclose(f);
 return true;
 }
 /*
@@ -377,7 +377,7 @@ if (base == 0 && exponent < 0)
     return false;
     }
 
-    FILE *f = fopen(filename, "a");
+    FILE *f = fopen(filename, "ab");
 
     if (f == NULL)
 {
@@ -385,10 +385,13 @@ if (base == 0 && exponent < 0)
 }
 double pow_value = pow(base, exponent);
 
-fprintf(f, "%.2f\n", pow_value);
-fclose(f);              // always close!
-return true;
+size_t written = fwrite(&pow_value, sizeof(double), 1, f);
 
+fclose(f);              // always close!
+
+
+
+    return written == 1;
 }
 
 
@@ -643,13 +646,13 @@ if (f == NULL)
     return -1;       // always check!
 }
 
-if (fseek(f, 0, SEEK_END) !=0)
+if (fseeko(f, 0, SEEK_END) !=0)
 {
     fclose(f);
     return -1;
 }
 
-long size = ftell(f);
+long long size = ftello(f);
 
 fclose(f);              // always close!
 return size;
